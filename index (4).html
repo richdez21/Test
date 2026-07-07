@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursos Institucionales</title>
+<style>
+:root{--bg:#f5f5f5;--card:#fff;--text:#222;--shadow:0 4px 10px rgba(0,0,0,.08)}
+@media (prefers-color-scheme:dark){
+:root{--bg:#121212;--card:#1f1f1f;--text:#eee;--shadow:0 4px 10px rgba(0,0,0,.35)}
+}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;justify-content:center}
+.app{width:100%;max-width:430px;padding:20px}
+h1{text-align:center}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border-radius:16px;padding:16px;margin:14px 0;box-shadow:var(--shadow);border-left:8px solid}
+.card.green{border-color:#2e7d32}.card.yellow{border-color:#f9a825}.card.red{border-color:#c62828}
+.title{font-weight:700;font-size:1.05rem;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;font-size:.95rem}
+<style>
+#lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999}
+.box{background:var(--card);padding:24px;border-radius:16px;box-shadow:var(--shadow);width:90%;max-width:340px;text-align:center}
+.box input{width:100%;padding:10px;margin:10px 0;border-radius:8px}
+.box button{padding:10px 16px;border:none;border-radius:8px;background:#1976d2;color:#fff}
+.err{color:#c62828;min-height:20px}
+</style></style>
+</head><body><div id="lock"><div class="box"><h2>🔒 Acceso</h2><p>Ingrese la contraseña</p><input id="pw" type="password"><label><input type="checkbox" id="sh"> Mostrar</label><div class="err" id="er"></div><button onclick="login()">Ingresar</button></div></div><div class="app"><h1>Recursos Institucionales</h1><div id="lista"></div></div>
+<script>
+// CONFIGURACIÓN
+
+// DATOS DE LOS ENLACES
+const enlaces=[
+{titulo:"Portal Académico",url:"https://example.com",vence:"2026-12-15"},
+{titulo:"Biblioteca",url:"https://example.org",vence:"2026-09-15"}
+];
+
+// FUNCIONES
+const fmt=f=>{let d=new Date(f+"T00:00:00");return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+"/"+d.getFullYear();}
+function estado(v){
+ const hoy=new Date();hoy.setHours(0,0,0,0);
+ const ven=new Date(v+"T00:00:00");
+ const dias=Math.ceil((ven-hoy)/86400000);
+ let cls="green"; if(dias<60)cls="red"; else if(dias<=120)cls="yellow";
+ return {dias,cls};
+}
+
+// RENDERIZADO
+const cont=document.getElementById("lista");
+enlaces.forEach(e=>{
+ const s=estado(e.vence);
+ const a=document.createElement("a");
+ a.className="card "+s.cls;a.href=e.url;a.target="_blank";a.rel="noopener";
+ a.innerHTML=`<div class="title">🔗 ${e.titulo}</div>
+ <div class="row"><span>📅 Vence: ${fmt(e.vence)}</span><span>${s.dias<0?"🔴 VENCIDO":"⏳ Faltan "+s.dias+" días"}</span></div>`;
+ cont.appendChild(a);
+});
+</script>
+<script>
+const KEY='auth24',PASS='test123';
+function ok(){return localStorage.getItem(KEY)&&Date.now()<+localStorage.getItem(KEY)}
+function login(){const p=pw.value;if(p===PASS){localStorage.setItem(KEY,Date.now()+86400000);lock.style.display='none';}else er.textContent='Contraseña incorrecta';}
+sh.onchange=()=>pw.type=sh.checked?'text':'password';
+if(ok()) lock.style.display='none';
+</script>
+</body></html>
