@@ -23,7 +23,7 @@ h1{text-align:center}
 .box button{padding:10px 16px;border:none;border-radius:8px;background:#1976d2;color:#fff}
 .err{color:#c62828;min-height:20px}
 </style></style>
-</head><body><div id="lock"><div class="box"><h2>🔒 Acceso</h2><p>Ingrese la contraseña</p><input id="pw" type="password"><label><input type="checkbox" id="sh"> Mostrar</label><div class="err" id="er"></div><button onclick="login()">Ingresar</button></div></div><div class="app"><h1>Recursos Institucionales</h1><div id="lista"></div></div>
+</head><body><div id="lock"><div class="box"><h2>🔒 Acceso</h2><p>Ingrese la contraseña</p><input id="pw" type="password"><label><input type="checkbox" id="sh"> Mostrar</label><div class="err" id="er"></div><button onclick="login()">Ingresar</button></div></div><div class="app" id="app"><h1>Recursos Institucionales</h1><div id="lista"></div></div>
 <script>
 // CONFIGURACIÓN
 
@@ -59,6 +59,7 @@ const KEY='auth24',PASS='test123';
 function ok(){return localStorage.getItem(KEY)&&Date.now()<+localStorage.getItem(KEY)}
 function login(){const p=pw.value;if(p===PASS){localStorage.setItem(KEY,Date.now()+86400000);lock.style.display='none';}else er.textContent='Contraseña incorrecta';}
 sh.onchange=()=>pw.type=sh.checked?'text':'password';
-if(ok()) lock.style.display='none';
+if(ok()){ lock.style.display='none'; } else { app.style.display='none'; }
+const old=login; login=function(){const p=pw.value;if(p===PASS){localStorage.setItem(KEY,Date.now()+86400000);lock.style.display='none';app.style.display='block';}else er.textContent='Contraseña incorrecta';}
 </script>
 </body></html>
